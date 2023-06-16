@@ -119,6 +119,7 @@ public class Tetris extends JFrame{
                 y0 += vertspacing;
             }
         }
+        
     }
 
     private class DisplayPanelRight extends JPanel {
