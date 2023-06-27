@@ -7,8 +7,8 @@ CSC220/bin/ArrayListAssignment/TestRationalNumberList.class
 CSC220/bin/CellGame/Cell.class
 CSC220/bin/CellGame/Conway.class
 CSC220/bin/CellGame/Drawing.class
-CSC220/bin/CellGame/GridCanvas.class
 CSC220/bin/ComplexNumbers/ComplexNumber.class
+CSC220/bin/CellGame/GridCanvas.ClassExampleAppJan26
 CSC220/bin/ComplexNumbers/PersonalTestCN.class
 CSC220/bin/ComplexNumbers/TestComplexNumber.class
 CSC220/bin/FileIO/FileIOTestHarness.class
@@ -111,3 +111,4 @@ CSC220/bin/Serialization/Shape.class
 CSC220/bin/Synchronization/Synchronization.class
 CSC220/bin/Synchronization/Synchronization$Account.class
 CSC220/bin/Synchronization/Synchronization$AddAPennyTask.class
+CSC220/bin/CellGame/GridCanvas.class
