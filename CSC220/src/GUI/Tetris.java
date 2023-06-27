@@ -125,7 +125,7 @@ public class Tetris extends JFrame{
     }
 
     private class DisplayPanelRight extends JPanel {
-        
+        private JLabel nextLabel;
 
         public DisplayPanelRight(){
             super();
@@ -133,10 +133,17 @@ public class Tetris extends JFrame{
             this.setBackground(Color.BLACK);
 
             prepareComponents();
+
+            this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
+
+            this.add(nextLabel);
+            this.add(new nextPanel(125, 400));
         }
 
         private void prepareComponents() {
-            
+            nextLabel = new JLabel("NEXT");
+            nextLabel.setFont(new Font("Arial", Font.PLAIN, 50));
+            nextLabel.setForeground(Color.WHITE);
         }
         
         @Override
@@ -229,6 +236,27 @@ public class Tetris extends JFrame{
         private int height, width;
 
         public holdPanel(int width, int height){
+            this.height = height;
+            this.width = width;
+
+            this.setBackground(Color.GRAY);
+        }
+
+        @Override
+        public Dimension getPreferredSize(){
+            return new Dimension(width, height);
+        }
+
+        @Override
+        public void paint(Graphics g){
+            super.paintComponent(g);
+        }
+    }
+
+    private class nextPanel extends JPanel{
+        private int height, width;
+
+        public nextPanel(int width, int height){
             this.height = height;
             this.width = width;
 
