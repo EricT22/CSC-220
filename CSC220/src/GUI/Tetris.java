@@ -14,10 +14,12 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Tetris extends JFrame{
     private final int WIDTH = 800;
     private final int HEIGHT = 650;
+    private final Color COLOR_PURPLE = new Color(155, 0, 228);
 
     private GamePanel gpanel;
     private DisplayPanelRight dpr;
@@ -144,10 +146,18 @@ public class Tetris extends JFrame{
     }
 
     private class DisplayPanelLeft extends JPanel {
-        private JLabel hold;
-        private JLabel level;
-        private JLabel score;
-        private JLabel lines;
+        public int level;
+        public int score;
+        public int linesCleared;
+        
+        private JLabel holdLabel;
+        private JLabel levelLabel;
+        private JLabel scoreLabel;
+        private JLabel linesClearedLabel;
+        private JTextField levelField;
+        private JTextField scoreField;
+        private JTextField linesClearedField;
+
 
         public DisplayPanelLeft(){
             super();
@@ -158,14 +168,55 @@ public class Tetris extends JFrame{
 
             this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
-            this.add(hold);
+            this.add(holdLabel);
             this.add(new holdPanel(125, 100));
+
+            this.add(levelLabel);
+            this.add(levelField);
+            this.add(scoreLabel);
+            this.add(scoreField);
+            this.add(linesClearedLabel);
+            this.add(linesClearedField);
         }
 
         private void prepareComponents() {
-            hold = new JLabel("HOLD");
-            hold.setFont(new Font("Arial", Font.PLAIN, 50));
-            hold.setForeground(Color.WHITE);
+            holdLabel = new JLabel("HOLD");
+            holdLabel.setFont(new Font("Arial", Font.PLAIN, 50));
+            holdLabel.setForeground(Color.WHITE);
+
+            levelLabel = new JLabel("LEVEL");
+            levelLabel.setFont(new Font("Arial", Font.PLAIN, 50));
+            levelLabel.setForeground(Color.WHITE);
+
+            levelField = new JTextField(level + "", 5);
+            levelField.setFont(new Font("Arial", Font.PLAIN, 25));
+            levelField.setHorizontalAlignment(JTextField.CENTER);
+            levelField.setBackground(Color.GRAY);
+            levelField.setForeground(Color.RED);
+            levelField.setEditable(false);
+            
+            scoreLabel = new JLabel("SCORE");
+            scoreLabel.setFont(new Font("Arial", Font.PLAIN, 50));
+            scoreLabel.setForeground(Color.WHITE);
+            
+            scoreField = new JTextField(score + "", 5);
+            scoreField.setFont(new Font("Arial", Font.PLAIN, 25));
+            scoreField.setHorizontalAlignment(JTextField.CENTER);
+            scoreField.setBackground(Color.GRAY);
+            scoreField.setForeground(Color.GREEN);
+            scoreField.setEditable(false);
+
+            linesClearedLabel = new JLabel("LINES");
+            linesClearedLabel.setFont(new Font("Arial", Font.PLAIN, 50));
+            linesClearedLabel.setForeground(Color.WHITE);
+            
+            linesClearedField = new JTextField(linesCleared + "", 5);
+            linesClearedField.setFont(new Font("Arial", Font.PLAIN, 25));
+            linesClearedField.setHorizontalAlignment(JTextField.CENTER);
+            linesClearedField.setBackground(Color.GRAY);
+            linesClearedField.setForeground(COLOR_PURPLE);
+            linesClearedField.setEditable(false);
+            
         }
 
         @Override
