@@ -167,6 +167,12 @@ public class Tetris extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (playButton.getText().equals("PLAY")){
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                        
                         playButton.setText("PAUSE");
 
                         new Thread(gameWorker).start();
@@ -187,6 +193,7 @@ public class Tetris extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     gameWorker.stop();
+                    playButton.setText("PLAY");
 
                     level = 1;
                     gameWorker.setTickSpeed(level);
@@ -195,7 +202,7 @@ public class Tetris extends JFrame{
                     score = 0;
                     dpl.scoreField.setText(score + "");
 
-                    linesCleared = 0;
+                    linesCleared = 20;
                     dpl.linesClearedField.setText(linesCleared + "");
                     
                     gamePanel.requestFocus();
