@@ -58,10 +58,10 @@ public class Tetris extends JFrame{
     }
 
     public class GamePanel extends JPanel implements KeyListener{
-        private final int COLS = 10;
-        private final int ROWS = 20;
-        private Color lineColor = Color.BLACK;
-        private Color backgroundColor = new Color(60, 130, 200);
+        public static final int COLS = 10;
+        public static final int ROWS = 20;
+        public static Color lineColor = Color.BLACK;
+        public static Color backgroundColor = new Color(60, 130, 200);
 
         public GamePanel(){
             super();
