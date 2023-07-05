@@ -202,7 +202,7 @@ public class Tetris extends JFrame{
                     score = 0;
                     dpl.scoreField.setText(score + "");
 
-                    linesCleared = 20;
+                    linesCleared = 0;
                     dpl.linesClearedField.setText(linesCleared + "");
                     
                     gamePanel.requestFocus();
