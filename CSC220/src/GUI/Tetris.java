@@ -8,9 +8,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,9 +24,15 @@ public class Tetris extends JFrame{
     private final int HEIGHT = 650;
     private final Color COLOR_PURPLE = new Color(155, 0, 228);
 
-    private GamePanel gpanel;
+    private int level = 1;
+    private int score = 0;
+    private int linesCleared = 0;
+
+    private GamePanel gamePanel;
     private DisplayPanelRight dpr;
-    private DisplayPanelLeft dlr;
+    private DisplayPanelLeft dpl;
+
+    private TetrisWorker gameWorker;
 
     public Tetris(){
         super("Tetris");
@@ -33,22 +42,22 @@ public class Tetris extends JFrame{
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout(0, 0));
 
-        gpanel = new GamePanel();
+        gamePanel = new GamePanel();
         dpr = new DisplayPanelRight();
-        dlr = new DisplayPanelLeft();
+        dpl = new DisplayPanelLeft();
 
-        this.add(gpanel, BorderLayout.CENTER);
+        this.add(gamePanel, BorderLayout.CENTER);
         this.add(dpr, BorderLayout.EAST);
-        this.add(dlr, BorderLayout.WEST);
+        this.add(dpl, BorderLayout.WEST);
         
         this.setResizable(false);
-        gpanel.repaint();
+        gamePanel.repaint();
         this.setVisible(true);
-        gpanel.setFocusable(true);
-        gpanel.requestFocusInWindow();
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
     }
 
-    private class GamePanel extends JPanel implements KeyListener{
+    public class GamePanel extends JPanel implements KeyListener{
         private final int COLS = 10;
         private final int ROWS = 20;
         private Color lineColor = Color.BLACK;
@@ -66,14 +75,14 @@ public class Tetris extends JFrame{
         @Override
         public void keyPressed(KeyEvent e) {
             System.out.println("Key PRESSED: " + e.getKeyCode());
-            gpanel.repaint();
+            gamePanel.repaint();
         }
 
         // Use this for setting speed back to normal
         @Override
         public void keyReleased(KeyEvent e) {
             System.out.println("Key released: " + e.getKeyCode());
-            gpanel.repaint();
+            gamePanel.repaint();
         }
 
         @Override
@@ -126,6 +135,8 @@ public class Tetris extends JFrame{
 
     private class DisplayPanelRight extends JPanel {
         private JLabel nextLabel;
+        private JButton playButton;
+        private JButton resetButton;
 
         public DisplayPanelRight(){
             super();
@@ -138,12 +149,59 @@ public class Tetris extends JFrame{
 
             this.add(nextLabel);
             this.add(new nextPanel(125, 400));
+            this.add(playButton);
+            this.add(resetButton);
+
+            gameWorker = new TetrisWorker(level, gamePanel);
         }
 
         private void prepareComponents() {
             nextLabel = new JLabel("NEXT");
             nextLabel.setFont(new Font("Arial", Font.PLAIN, 50));
             nextLabel.setForeground(Color.WHITE);
+
+            playButton = new JButton("PLAY");
+            playButton.setFont(new Font("Arial", Font.PLAIN, 25));
+            playButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (playButton.getText().equals("PLAY")){
+                        playButton.setText("PAUSE");
+
+                        new Thread(gameWorker).start();
+                    } else {
+                        playButton.setText("PLAY");
+
+                        gameWorker.stop();
+                    }    
+                    gamePanel.requestFocus();
+                }
+
+            });
+
+            resetButton = new JButton("RESET");
+            resetButton.setFont(new Font("Arial", Font.PLAIN, 25));
+            resetButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gameWorker.stop();
+
+                    level = 1;
+                    gameWorker.setTickSpeed(level);
+                    dpl.levelField.setText(level + "");
+
+                    score = 0;
+                    dpl.scoreField.setText(score + "");
+
+                    linesCleared = 0;
+                    dpl.linesClearedField.setText(linesCleared + "");
+                    
+                    gamePanel.requestFocus();
+                }
+
+            });
         }
         
         @Override
@@ -152,18 +210,15 @@ public class Tetris extends JFrame{
         }
     }
 
-    private class DisplayPanelLeft extends JPanel {
-        public int level;
-        public int score;
-        public int linesCleared;
+    public class DisplayPanelLeft extends JPanel {
         
         private JLabel holdLabel;
         private JLabel levelLabel;
         private JLabel scoreLabel;
         private JLabel linesClearedLabel;
-        private JTextField levelField;
-        private JTextField scoreField;
-        private JTextField linesClearedField;
+        public JTextField levelField;
+        public JTextField scoreField;
+        public JTextField linesClearedField;
 
 
         public DisplayPanelLeft(){
