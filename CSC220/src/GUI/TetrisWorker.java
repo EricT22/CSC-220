@@ -1,14 +1,116 @@
 package GUI;
 
+import java.awt.Point;
 import GUI.Tetris.GamePanel;
 
-public class TetrisWorker implements Runnable{
+public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     // TODO: add logic for one piece first
     private char[][][] universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
+    private int display = 0;
+
+    private boolean pieceInPlay = false;
+    private Point center;
+    private char curPiece;
+    private int orientation; // 0 up, 1 right, 2 down, 3 left
     private boolean stop = true;
+    
     private int tickSpeed;
     private GamePanel gpanel;
+
+    // may have to put try-catch blocks b/c of long boi but for now we're good (or we can do orientation if stmts for that specifically)
+    public void movePieceDown(){
+        if (pieceInPlay && center.y != 19){
+            removePieceFromBoard();
+
+            center.y += 1;
+            
+            if (curPiece == 'T'){
+                for (int i = 0; i < T.length; i++){
+                    if (!(universe[display][center.y + T[i].y][center.x + T[i].x] == 0)){
+                        center.y -= 1;
+                        returnPieceToBoard();
+                        pieceInPlay = !pieceInPlay;
+                        return;
+                    }
+                }
+
+                for (int i = 0; i < T.length; i++){
+                    universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
+                }
+            }
+
+            if (center.y == 19){
+                pieceInPlay = !pieceInPlay;
+            }
+
+            copyToProcess();
+        }
+    }
+
+    public void movePieceRight(){
+        if (pieceInPlay && center.x != 8){
+            removePieceFromBoard();
+
+            center.x += 1;
+            
+            if (curPiece == 'T'){
+                for (int i = 0; i < T.length; i++){
+                    if (!(universe[display][center.y + T[i].y][center.x + T[i].x] == 0)){
+                        center.x -= 1;
+                        returnPieceToBoard();
+                        return;
+                    }
+                }
+
+                for (int i = 0; i < T.length; i++){
+                    universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
+                }
+            }
+
+            copyToProcess();
+        }
+    }
+
+    public void movePieceLeft(){
+    if (pieceInPlay && center.x != 1){
+        removePieceFromBoard();
+
+        center.x -= 1;
+        
+        if (curPiece == 'T'){
+            for (int i = 0; i < T.length; i++){
+                if (!(universe[display][center.y + T[i].y][center.x + T[i].x] == 0)){
+                    center.x += 1;
+                    returnPieceToBoard();
+                    return;
+                }
+            }
+
+            for (int i = 0; i < T.length; i++){
+                universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
+            }
+        }
+
+        copyToProcess();
+    }
+    }
+    
+    private void returnPieceToBoard() {
+        if (curPiece == 'T'){
+            for (int i = 0; i < T.length; i++){
+                universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
+            }
+        }
+    }
+
+    private void removePieceFromBoard() {
+        if (curPiece == 'T'){
+            for (int i = 0; i < T.length; i++){
+                universe[display][center.y + T[i].y][center.x + T[i].x] = 0;
+            }
+        }
+    }
 
     public TetrisWorker(int level, GamePanel gpanel){
         tickSpeed = 1000 / level;
@@ -20,6 +122,16 @@ public class TetrisWorker implements Runnable{
         stop = false;
         while (!stop){
             try {
+                // TODO: Every tick, piece moves down till it hits the bottom
+
+                if (!pieceInPlay){
+                    spawnPiece();
+                } else {
+                    movePieceDown();
+                }
+
+                updateGen();
+
                 gpanel.repaint();
                 Thread.sleep(tickSpeed);
             } catch (InterruptedException e) {
@@ -28,6 +140,27 @@ public class TetrisWorker implements Runnable{
         }
     }
     
+    private void spawnPiece() {
+        // TODO: Implement bag logic
+        
+        // for now, just spawns a T piece;
+
+        center = new Point(4, 1);
+        orientation = 0;
+        curPiece = 'T';
+        
+        universe[1 - display][center.y][center.x] = 'T';
+        universe[1 - display][center.y][center.x + 1] = 'T';
+        universe[1 - display][center.y][center.x - 1] = 'T';
+        universe[1 - display][center.y - 1][center.x] = 'T';
+
+        pieceInPlay = true;
+    }
+
+    public char pieceAtPoint(int x, int y){
+        return universe[display][x][y];
+    }
+
     public void stop(){
         stop = true;
     }
@@ -35,4 +168,26 @@ public class TetrisWorker implements Runnable{
     public void setTickSpeed(int level){
         tickSpeed = 1000 / level;
     }
+
+    public void clearBoard(){
+        universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
+        pieceInPlay = false;
+    }
+
+    private void updateGen() {
+        display = 1 - display;
+        copyToProcess();
+    }
+
+    private void copyToProcess(){
+        char[][] copy = new char[universe[display].length][universe[display][0].length];
+
+        for (int i = 0; i < copy.length; i++){
+            for (int j = 0; j < copy[i].length; j++){
+                copy[i][j] = universe[display][i][j];
+            }
+        }
+
+        universe[1 - display] = copy;
+    }    
 }

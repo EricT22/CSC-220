@@ -74,11 +74,19 @@ public class Tetris extends JFrame{
         
         @Override
         public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == 40){
+                gameWorker.movePieceDown();
+            } else if (e.getKeyCode() == 39){
+                gameWorker.movePieceRight();
+            } else if (e.getKeyCode() == 37){
+                gameWorker.movePieceLeft();
+            }
+
             System.out.println("Key PRESSED: " + e.getKeyCode());
             gamePanel.repaint();
         }
 
-        // Use this for setting speed back to normal
+        
         @Override
         public void keyReleased(KeyEvent e) {
             System.out.println("Key released: " + e.getKeyCode());
@@ -128,6 +136,22 @@ public class Tetris extends JFrame{
             for (int i = 0; i < verts; ++i) {
                 g2.drawLine(0, (int)y0, width, (int)y0);
                 y0 += vertspacing;
+            }
+
+            for (int i = 0; i < verts; i++){
+                for (int j = 0; j < horzs; j++){
+                    if (gameWorker.pieceAtPoint(i, j) == 'T'){
+                        g2.setColor(COLOR_PURPLE);
+                        int x = (int) (j* horzspacing);
+                        int y = (int) (i * vertspacing);
+                        int w = (int) ((j + 1) * horzspacing) - x;
+                        int h = (int) ((i + 1) * vertspacing) - y;
+                        g2.fillRect(x, y, w, h);
+
+                        g2.setColor(Color.BLACK);
+                        g2.drawRect(x, y, w, h);
+                    }
+                }
             }
         }
         
@@ -193,6 +217,9 @@ public class Tetris extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     gameWorker.stop();
+                    gameWorker.clearBoard();
+
+                    
                     playButton.setText("PLAY");
 
                     level = 1;
@@ -205,6 +232,7 @@ public class Tetris extends JFrame{
                     linesCleared = 0;
                     dpl.linesClearedField.setText(linesCleared + "");
                     
+                    gamePanel.repaint();
                     gamePanel.requestFocus();
                 }
 
