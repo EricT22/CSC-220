@@ -20,31 +20,33 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     // may have to put try-catch blocks b/c of long boi but for now we're good (or we can do orientation if stmts for that specifically)
     public void movePieceDown(){
-        if (pieceInPlay && center.y != 19){
-            removePieceFromBoard();
+        if (pieceInPlay){
+            try {
+                removePieceFromBoard();
 
-            center.y += 1;
-            
-            if (curPiece == 'T'){
-                for (int i = 0; i < T.length; i++){
-                    if (!(universe[display][center.y + T[i].y][center.x + T[i].x] == 0)){
-                        center.y -= 1;
-                        returnPieceToBoard();
-                        pieceInPlay = !pieceInPlay;
-                        return;
+                center.y += 1;
+                
+                if (curPiece == 'T'){
+                    for (int i = 0; i < T.length; i++){
+                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
+                            center.y -= 1;
+                            returnPieceToBoard();
+                            pieceInPlay = !pieceInPlay;
+                            return;
+                        }
+                    }
+
+                    for (int i = 0; i < T.length; i++){
+                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
                     }
                 }
 
-                for (int i = 0; i < T.length; i++){
-                    universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
-                }
-            }
-
-            if (center.y == 19){
+                copyToProcess();
+            } catch (IndexOutOfBoundsException e){
+                center.y -= 1;
+                returnPieceToBoard();
                 pieceInPlay = !pieceInPlay;
             }
-
-            copyToProcess();
         }
     }
 
@@ -56,7 +58,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
             
             if (curPiece == 'T'){
                 for (int i = 0; i < T.length; i++){
-                    if (!(universe[display][center.y + T[i].y][center.x + T[i].x] == 0)){
+                    if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
                         center.x -= 1;
                         returnPieceToBoard();
                         return;
@@ -64,7 +66,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 }
 
                 for (int i = 0; i < T.length; i++){
-                    universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
+                    universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
                 }
             }
 
@@ -80,7 +82,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         
         if (curPiece == 'T'){
             for (int i = 0; i < T.length; i++){
-                if (!(universe[display][center.y + T[i].y][center.x + T[i].x] == 0)){
+                if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
                     center.x += 1;
                     returnPieceToBoard();
                     return;
@@ -88,7 +90,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
             }
 
             for (int i = 0; i < T.length; i++){
-                universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
+                universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
             }
         }
 
@@ -99,7 +101,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private void returnPieceToBoard() {
         if (curPiece == 'T'){
             for (int i = 0; i < T.length; i++){
-                universe[display][center.y + T[i].y][center.x + T[i].x] = 'T';
+                universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
             }
         }
     }
@@ -107,7 +109,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private void removePieceFromBoard() {
         if (curPiece == 'T'){
             for (int i = 0; i < T.length; i++){
-                universe[display][center.y + T[i].y][center.x + T[i].x] = 0;
+                universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 0;
             }
         }
     }
