@@ -75,27 +75,27 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
 
     public void movePieceLeft(){
-    if (pieceInPlay && center.x != 1){
-        removePieceFromBoard();
+        if (pieceInPlay && center.x != 1){
+            removePieceFromBoard();
 
-        center.x -= 1;
-        
-        if (curPiece == 'T'){
-            for (int i = 0; i < T.length; i++){
-                if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                    center.x += 1;
-                    returnPieceToBoard();
-                    return;
+            center.x -= 1;
+            
+            if (curPiece == 'T'){
+                for (int i = 0; i < T.length; i++){
+                    if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
+                        center.x += 1;
+                        returnPieceToBoard();
+                        return;
+                    }
+                }
+
+                for (int i = 0; i < T.length; i++){
+                    universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
                 }
             }
 
-            for (int i = 0; i < T.length; i++){
-                universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
-            }
+            copyToProcess();
         }
-
-        copyToProcess();
-    }
     }
     
     private void returnPieceToBoard() {
