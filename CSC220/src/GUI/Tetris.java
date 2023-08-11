@@ -80,6 +80,10 @@ public class Tetris extends JFrame{
                 gameWorker.movePieceRight();
             } else if (e.getKeyCode() == 37){
                 gameWorker.movePieceLeft();
+            } else if (e.getKeyCode() == 38 || e.getKeyCode() == 67){
+                gameWorker.rotatePiece(true);
+            } else if (e.getKeyCode() == 88){
+                gameWorker.rotatePiece(false);
             }
 
             System.out.println("Key PRESSED: " + e.getKeyCode());

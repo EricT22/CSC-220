@@ -27,7 +27,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 center.y += 1;
                 
                 if (curPiece == 'T'){
-                    for (int i = 0; i < T.length; i++){
+                    for (int i = 0; i < T[orientation].length; i++){
                         if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
                             center.y -= 1;
                             returnPieceToBoard();
@@ -36,7 +36,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                         }
                     }
 
-                    for (int i = 0; i < T.length; i++){
+                    for (int i = 0; i < T[orientation].length; i++){
                         universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
                     }
                 }
@@ -51,56 +51,98 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
 
     public void movePieceRight(){
-        if (pieceInPlay && center.x != 8){
-            removePieceFromBoard();
+        if (pieceInPlay){
+            try {
+                removePieceFromBoard();
 
-            center.x += 1;
-            
-            if (curPiece == 'T'){
-                for (int i = 0; i < T.length; i++){
-                    if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                        center.x -= 1;
-                        returnPieceToBoard();
-                        return;
+                center.x += 1;
+                
+                if (curPiece == 'T'){
+                    for (int i = 0; i < T[orientation].length; i++){
+                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
+                            center.x -= 1;
+                            returnPieceToBoard();
+                            return;
+                        }
+                    }
+
+                    for (int i = 0; i < T[orientation].length; i++){
+                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
                     }
                 }
 
-                for (int i = 0; i < T.length; i++){
-                    universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
-                }
+                copyToProcess();
+            } catch (IndexOutOfBoundsException e){
+                center.x -= 1;
+                returnPieceToBoard();
             }
-
-            copyToProcess();
         }
     }
 
     public void movePieceLeft(){
-        if (pieceInPlay && center.x != 1){
-            removePieceFromBoard();
+        if (pieceInPlay){
+            try {
+                removePieceFromBoard();
 
-            center.x -= 1;
-            
-            if (curPiece == 'T'){
-                for (int i = 0; i < T.length; i++){
-                    if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                        center.x += 1;
-                        returnPieceToBoard();
-                        return;
+                center.x -= 1;
+                
+                if (curPiece == 'T'){
+                    for (int i = 0; i < T[orientation].length; i++){
+                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
+                            center.x += 1;
+                            returnPieceToBoard();
+                            return;
+                        }
+                    }
+
+                    for (int i = 0; i < T[orientation].length; i++){
+                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
                     }
                 }
 
-                for (int i = 0; i < T.length; i++){
-                    universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
-                }
+                copyToProcess();
+            } catch (IndexOutOfBoundsException e){
+                center.x += 1;
+                returnPieceToBoard();
             }
-
-            copyToProcess();
         }
     }
     
+    public void rotatePiece(boolean rotatingRight){
+        if (pieceInPlay){
+            int storedOrientation = orientation;
+            try {
+                removePieceFromBoard();
+
+                if (rotatingRight){
+                    orientation = (orientation + 1) % 4;
+                } else {
+                    orientation = (orientation -1 + 4) % 4;
+                }
+
+                if (curPiece == 'T'){
+                    for (int i = 0; i < T[orientation].length; i++){
+                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
+                            orientation = storedOrientation;
+                            returnPieceToBoard();
+                            return;
+                        }
+                    }
+
+                    for (int i = 0; i < T[orientation].length; i++){
+                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
+                    }
+                }
+            } catch (IndexOutOfBoundsException e){
+                orientation = storedOrientation;
+                returnPieceToBoard();
+            }
+        }
+    }
+
     private void returnPieceToBoard() {
         if (curPiece == 'T'){
-            for (int i = 0; i < T.length; i++){
+            for (int i = 0; i < T[orientation].length; i++){
                 universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
             }
         }
@@ -108,7 +150,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     private void removePieceFromBoard() {
         if (curPiece == 'T'){
-            for (int i = 0; i < T.length; i++){
+            for (int i = 0; i < T[orientation].length; i++){
                 universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 0;
             }
         }
