@@ -7,7 +7,8 @@ import java.util.Map;
 import GUI.Tetris.GamePanel;
 
 public class TetrisWorker implements Runnable, TetrisPieceConstants{
-
+    // TODO: finish changing over to HashMap, then implement new pieces
+    
     public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
 
     static {
@@ -53,7 +54,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
 
 
-    // TODO: add logic for one piece first
+    
     private char[][][] universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
     private int display = 0;
 
