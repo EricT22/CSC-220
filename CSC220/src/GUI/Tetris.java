@@ -77,9 +77,9 @@ public class Tetris extends JFrame{
             if (e.getKeyCode() == 40){
                 gameWorker.movePieceDown();
             } else if (e.getKeyCode() == 39){
-                gameWorker.movePieceRight();
+                gameWorker.movePiece(true);
             } else if (e.getKeyCode() == 37){
-                gameWorker.movePieceLeft();
+                gameWorker.movePiece(false);
             } else if (e.getKeyCode() == 38 || e.getKeyCode() == 67){
                 gameWorker.rotatePiece(true);
             } else if (e.getKeyCode() == 88){

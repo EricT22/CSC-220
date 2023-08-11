@@ -50,17 +50,24 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         }
     }
 
-    public void movePieceRight(){
+    public void movePiece(boolean moveRight){
         if (pieceInPlay){
             try {
                 removePieceFromBoard();
 
-                center.x += 1;
+                if (moveRight)
+                    center.x += 1;
+                else
+                    center.x -= 1;
                 
                 if (curPiece == 'T'){
                     for (int i = 0; i < T[orientation].length; i++){
                         if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                            center.x -= 1;
+                            if (moveRight)
+                                center.x -= 1;
+                            else
+                                center.x += 1;
+
                             returnPieceToBoard();
                             return;
                         }
@@ -73,36 +80,11 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
                 copyToProcess();
             } catch (IndexOutOfBoundsException e){
-                center.x -= 1;
-                returnPieceToBoard();
-            }
-        }
-    }
+                if (moveRight)
+                    center.x -= 1;
+                else
+                    center.x += 1;
 
-    public void movePieceLeft(){
-        if (pieceInPlay){
-            try {
-                removePieceFromBoard();
-
-                center.x -= 1;
-                
-                if (curPiece == 'T'){
-                    for (int i = 0; i < T[orientation].length; i++){
-                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                            center.x += 1;
-                            returnPieceToBoard();
-                            return;
-                        }
-                    }
-
-                    for (int i = 0; i < T[orientation].length; i++){
-                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
-                    }
-                }
-
-                copyToProcess();
-            } catch (IndexOutOfBoundsException e){
-                center.x += 1;
                 returnPieceToBoard();
             }
         }
