@@ -50,6 +50,12 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         }
     }
 
+    public void autoDown(){
+        while(pieceInPlay){
+            movePieceDown();
+        }
+    }
+
     public void movePiece(boolean moveRight){
         if (pieceInPlay){
             try {
