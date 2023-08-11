@@ -1,9 +1,57 @@
 package GUI;
 
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
+
 import GUI.Tetris.GamePanel;
 
 public class TetrisWorker implements Runnable, TetrisPieceConstants{
+
+    public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
+
+    static {
+        pieces.put('T', T);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // TODO: add logic for one piece first
     private char[][][] universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
@@ -129,18 +177,18 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
 
     private void returnPieceToBoard() {
-        if (curPiece == 'T'){
-            for (int i = 0; i < T[orientation].length; i++){
-                universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
-            }
+        Point[][] pieceConst = pieces.get(curPiece);
+        
+        for (int i = 0; i < pieceConst[orientation].length; i++){
+            universe[display][center.y + pieceConst[orientation][i].y][center.x + pieceConst[orientation][i].x] = curPiece;
         }
     }
 
     private void removePieceFromBoard() {
-        if (curPiece == 'T'){
-            for (int i = 0; i < T[orientation].length; i++){
-                universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 0;
-            }
+        Point[][] pieceConst = pieces.get(curPiece);
+
+        for (int i = 0; i < pieceConst[orientation].length; i++){
+            universe[display][center.y + pieceConst[orientation][i].y][center.x + pieceConst[orientation][i].x] = 0;
         }
     }
 
