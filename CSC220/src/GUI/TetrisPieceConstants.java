@@ -7,7 +7,28 @@ public interface TetrisPieceConstants {
                    {new Point(0, 0), new Point(0, 1), new Point(0, -1), new Point(1, 0)},
                    {new Point(0, 0), new Point(-1, 0), new Point(1, 0), new Point(0, 1)},
                    {new Point(0, 0), new Point(0, -1), new Point(0, 1), new Point(-1, 0)}};
-                  
+
+    Point[][] L = {{new Point(0, 0), new Point(1, 0), new Point(-1, 0), new Point(1, -1)},
+                   {new Point(0, 0), new Point(0, 1), new Point(0, -1), new Point(1, 1)},
+                   {new Point(0, 0), new Point(-1, 0), new Point(1, 0), new Point(-1, 1)},
+                   {new Point(0, 0), new Point(0, -1), new Point(0, 1), new Point(-1, -1)}};
+
+    Point[][] J = {{new Point(0, 0), new Point(1, 0), new Point(-1, 0), new Point(-1, -1)},
+                   {new Point(0, 0), new Point(0, 1), new Point(0, -1), new Point(1, -1)},
+                   {new Point(0, 0), new Point(-1, 0), new Point(1, 0), new Point(1, 1)},
+                   {new Point(0, 0), new Point(0, -1), new Point(0, 1), new Point(-1, 1)}};
+
+    Point[][] O = {{new Point(0, 0), new Point(1, 0), new Point(0, -1), new Point(1, -1)}};
+
+    Point[][] S = {{new Point(0, 0), new Point(1, -1), new Point(-1, 0), new Point(0, -1)},
+                   {new Point(0, 0), new Point(1, 1), new Point(0, -1), new Point(1, 0)},
+                   {new Point(0, 0), new Point(-1, 1), new Point(1, 0), new Point(0, 1)},
+                   {new Point(0, 0), new Point(-1, -1), new Point(0, 1), new Point(-1, 0)}};
     
-    // implement the rest of the pieces
+    Point[][] Z = {{new Point(0, 0), new Point(-1, -1), new Point(1, 0), new Point(0, -1)},
+                   {new Point(0, 0), new Point(1, -1), new Point(0, 1), new Point(1, 0)},
+                   {new Point(0, 0), new Point(1, 1), new Point(-1, 0), new Point(0, 1)},
+                   {new Point(0, 0), new Point(-1, 1), new Point(0, -1), new Point(-1, 0)}};
+    
+    // TODO: Implement I piece
 }

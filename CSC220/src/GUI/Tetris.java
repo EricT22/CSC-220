@@ -146,17 +146,34 @@ public class Tetris extends JFrame{
 
             for (int i = 0; i < verts; i++){
                 for (int j = 0; j < horzs; j++){
-                    if (gameWorker.pieceAtPoint(i, j) == 'T'){
-                        g2.setColor(COLOR_PURPLE);
-                        int x = (int) (j* horzspacing);
-                        int y = (int) (i * vertspacing);
-                        int w = (int) ((j + 1) * horzspacing) - x;
-                        int h = (int) ((i + 1) * vertspacing) - y;
-                        g2.fillRect(x, y, w, h);
+                    char curPiece = gameWorker.pieceAtPoint(i, j);
 
-                        g2.setColor(Color.BLACK);
-                        g2.drawRect(x, y, w, h);
-                    }
+                    if (curPiece == 0){
+                        continue;
+                    } else if (curPiece == 'T'){
+                        g2.setColor(COLOR_PURPLE);
+                    } else if (curPiece == 'L'){
+                        g2.setColor(Color.ORANGE);
+                    } else if (curPiece == 'J'){
+                        g2.setColor(Color.BLUE);
+                    } else if (curPiece == 'I'){
+                        g2.setColor(new Color(30, 220, 252)); // light blue
+                    } else if (curPiece == 'O'){
+                        g2.setColor(Color.YELLOW);
+                    } else if (curPiece == 'S'){
+                        g2.setColor(Color.GREEN);
+                    } else if (curPiece == 'Z'){
+                        g2.setColor(Color.RED);
+                    } 
+                        
+                    int x = (int) (j* horzspacing);
+                    int y = (int) (i * vertspacing);
+                    int w = (int) ((j + 1) * horzspacing) - x;
+                    int h = (int) ((i + 1) * vertspacing) - y;
+                    g2.fillRect(x, y, w, h);
+
+                    g2.setColor(Color.BLACK);
+                    g2.drawRect(x, y, w, h);
                 }
             }
         }

@@ -146,7 +146,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
     
     public void rotatePiece(boolean rotatingRight){
-        if (pieceInPlay){
+        if (pieceInPlay && curPiece != 'O'){
             int storedOrientation = orientation;
             try {
                 removePieceFromBoard();
