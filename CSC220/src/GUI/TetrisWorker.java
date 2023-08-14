@@ -1,13 +1,16 @@
 package GUI;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import GUI.Tetris.GamePanel;
 
 public class TetrisWorker implements Runnable, TetrisPieceConstants{
-    // TODO: finish changing over to HashMap, then implement new pieces, also find way to end game
+    // TODO: Find way to end game then link it up with main GUI
     
     public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
 
@@ -66,10 +69,12 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private boolean pieceInPlay = false;
     private Point center;
     private char curPiece;
-    Point[][] curPieceConsts;
     private int orientation; // 0 up, 1 right, 2 down, 3 left
+    Point[][] curPieceConsts;
+
+    private List<Character> bag = new ArrayList<Character>(6);
+
     private boolean stop = true;
-    
     private int tickSpeed;
     private GamePanel gpanel;
 
@@ -173,7 +178,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 }
 
                 copyToProcess();
-                
+
             } catch (IndexOutOfBoundsException e){
                 orientation = storedOrientation;
                 returnPieceToBoard();
@@ -207,7 +212,6 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
                 if (!pieceInPlay){
                     spawnPiece();
-                    curPieceConsts = pieces.get(curPiece);
                 } else {
                     movePieceDown();
                 }
@@ -223,18 +227,31 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
     
     private void spawnPiece() {
-        // TODO: Implement bag logic
-        
-        // for now, just spawns a T piece;
+        if (bag.isEmpty()){
+            bag.add('T');
+            bag.add('L');
+            bag.add('J');
+            bag.add('O');
+            bag.add('S');
+            bag.add('Z');
+
+            Collections.shuffle(bag);
+        }
 
         center = new Point(4, 1);
         orientation = 0;
-        curPiece = 'T';
-        
-        universe[1 - display][center.y][center.x] = 'T';
-        universe[1 - display][center.y][center.x + 1] = 'T';
-        universe[1 - display][center.y][center.x - 1] = 'T';
-        universe[1 - display][center.y - 1][center.x] = 'T';
+        curPiece = bag.remove(0);
+        curPieceConsts = pieces.get(curPiece);
+
+        // for (int i = 0; i < curPieceConsts[orientation].length; i++){
+        //     if (universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] != 0){
+        //         stop = true;
+        //     }
+        // }
+
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
+        }
 
         pieceInPlay = true;
     }
