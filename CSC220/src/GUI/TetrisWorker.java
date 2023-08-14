@@ -7,12 +7,17 @@ import java.util.Map;
 import GUI.Tetris.GamePanel;
 
 public class TetrisWorker implements Runnable, TetrisPieceConstants{
-    // TODO: finish changing over to HashMap, then implement new pieces
+    // TODO: finish changing over to HashMap, then implement new pieces, also find way to end game
     
     public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
 
     static {
         pieces.put('T', T);
+        pieces.put('L', L);
+        pieces.put('J', J);
+        pieces.put('O', O);
+        pieces.put('S', S);
+        pieces.put('Z', Z);
     }
 
 
@@ -61,6 +66,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private boolean pieceInPlay = false;
     private Point center;
     private char curPiece;
+    Point[][] curPieceConsts;
     private int orientation; // 0 up, 1 right, 2 down, 3 left
     private boolean stop = true;
     
@@ -69,25 +75,23 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     // may have to put try-catch blocks b/c of long boi but for now we're good (or we can do orientation if stmts for that specifically)
     public void movePieceDown(){
-        if (pieceInPlay){
+        if (pieceInPlay && !stop){
             try {
                 removePieceFromBoard();
 
                 center.y += 1;
                 
-                if (curPiece == 'T'){
-                    for (int i = 0; i < T[orientation].length; i++){
-                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                            center.y -= 1;
-                            returnPieceToBoard();
-                            pieceInPlay = !pieceInPlay;
-                            return;
-                        }
+                for (int i = 0; i < curPieceConsts[orientation].length; i++){
+                    if (!(universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] == 0)){
+                        center.y -= 1;
+                        returnPieceToBoard();
+                        pieceInPlay = !pieceInPlay;
+                        return;
                     }
+                }
 
-                    for (int i = 0; i < T[orientation].length; i++){
-                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
-                    }
+                for (int i = 0; i < curPieceConsts[orientation].length; i++){
+                    universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
                 }
 
                 copyToProcess();
@@ -100,13 +104,13 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
 
     public void autoDown(){
-        while(pieceInPlay){
+        while(pieceInPlay && !stop){
             movePieceDown();
         }
     }
 
-    public void movePiece(boolean moveRight){
-        if (pieceInPlay){
+    public void movePieceSideways(boolean moveRight){
+        if (pieceInPlay && !stop){
             try {
                 removePieceFromBoard();
 
@@ -114,26 +118,25 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                     center.x += 1;
                 else
                     center.x -= 1;
-                
-                if (curPiece == 'T'){
-                    for (int i = 0; i < T[orientation].length; i++){
-                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                            if (moveRight)
-                                center.x -= 1;
-                            else
-                                center.x += 1;
+            
+                for (int i = 0; i < curPieceConsts[orientation].length; i++){
+                    if (!(universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] == 0)){
+                        if (moveRight)
+                            center.x -= 1;
+                        else
+                            center.x += 1;
 
-                            returnPieceToBoard();
-                            return;
-                        }
-                    }
-
-                    for (int i = 0; i < T[orientation].length; i++){
-                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
+                        returnPieceToBoard();
+                        return;
                     }
                 }
 
+                for (int i = 0; i < curPieceConsts[orientation].length; i++){
+                    universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
+                }
+
                 copyToProcess();
+
             } catch (IndexOutOfBoundsException e){
                 if (moveRight)
                     center.x -= 1;
@@ -146,7 +149,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
     
     public void rotatePiece(boolean rotatingRight){
-        if (pieceInPlay && curPiece != 'O'){
+        if (pieceInPlay && curPiece != 'O' && !stop){
             int storedOrientation = orientation;
             try {
                 removePieceFromBoard();
@@ -157,19 +160,20 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                     orientation = (orientation -1 + 4) % 4;
                 }
 
-                if (curPiece == 'T'){
-                    for (int i = 0; i < T[orientation].length; i++){
-                        if (!(universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] == 0)){
-                            orientation = storedOrientation;
-                            returnPieceToBoard();
-                            return;
-                        }
-                    }
-
-                    for (int i = 0; i < T[orientation].length; i++){
-                        universe[display][center.y + T[orientation][i].y][center.x + T[orientation][i].x] = 'T';
+                for (int i = 0; i < curPieceConsts[orientation].length; i++){
+                    if (!(universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] == 0)){
+                        orientation = storedOrientation;
+                        returnPieceToBoard();
+                        return;
                     }
                 }
+
+                for (int i = 0; i < curPieceConsts[orientation].length; i++){
+                    universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
+                }
+
+                copyToProcess();
+                
             } catch (IndexOutOfBoundsException e){
                 orientation = storedOrientation;
                 returnPieceToBoard();
@@ -178,18 +182,14 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
 
     private void returnPieceToBoard() {
-        Point[][] pieceConst = pieces.get(curPiece);
-        
-        for (int i = 0; i < pieceConst[orientation].length; i++){
-            universe[display][center.y + pieceConst[orientation][i].y][center.x + pieceConst[orientation][i].x] = curPiece;
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
         }
     }
 
     private void removePieceFromBoard() {
-        Point[][] pieceConst = pieces.get(curPiece);
-
-        for (int i = 0; i < pieceConst[orientation].length; i++){
-            universe[display][center.y + pieceConst[orientation][i].y][center.x + pieceConst[orientation][i].x] = 0;
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = 0;
         }
     }
 
@@ -207,6 +207,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
                 if (!pieceInPlay){
                     spawnPiece();
+                    curPieceConsts = pieces.get(curPiece);
                 } else {
                     movePieceDown();
                 }
