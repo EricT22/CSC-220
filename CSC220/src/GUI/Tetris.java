@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+// TODO: Add a ? button that opens the how-to-play instructions
 public class Tetris extends JFrame{
     private final int WIDTH = 800;
     private final int HEIGHT = 650;
