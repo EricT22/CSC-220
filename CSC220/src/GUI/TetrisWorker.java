@@ -21,6 +21,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         pieces.put('O', O);
         pieces.put('S', S);
         pieces.put('Z', Z);
+        pieces.put('I', I);
     }
 
 
@@ -72,7 +73,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private int orientation; // 0 up, 1 right, 2 down, 3 left
     Point[][] curPieceConsts;
 
-    private List<Character> bag = new ArrayList<Character>(6);
+    private List<Character> bag = new ArrayList<Character>(7);
 
     private boolean stop = true;
     private int tickSpeed;
@@ -234,6 +235,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
             bag.add('O');
             bag.add('S');
             bag.add('Z');
+            bag.add('I');
 
             Collections.shuffle(bag);
         }
