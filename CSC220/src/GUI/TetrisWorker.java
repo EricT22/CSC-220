@@ -75,6 +75,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     private List<Character> bag = new ArrayList<Character>(7);
 
+    private boolean gameOverReached = false;
     private boolean stop = true;
     private int tickSpeed;
     private GamePanel gpanel;
@@ -211,6 +212,11 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
             try {
                 // TODO: Every tick, piece moves down till it hits the bottom
 
+                if (gameOverReached){
+                    clearBoard();
+                    gameOverReached = false;
+                }
+
                 if (!pieceInPlay){
                     spawnPiece();
                 } else {
@@ -225,8 +231,16 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 e.printStackTrace();
             }
         }
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            gameOver();
+        }
     }
-    
+
     private void spawnPiece() {
         if (bag.isEmpty()){
             bag.add('T');
@@ -245,11 +259,12 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         curPiece = bag.remove(0);
         curPieceConsts = pieces.get(curPiece);
 
-        // for (int i = 0; i < curPieceConsts[orientation].length; i++){
-        //     if (universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] != 0){
-        //         stop = true;
-        //     }
-        // }
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            if (universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] != 0){
+                stop = true;
+                return;
+            }
+        }
 
         for (int i = 0; i < curPieceConsts[orientation].length; i++){
             universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
@@ -260,6 +275,34 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     public char pieceAtPoint(int x, int y){
         return universe[display][x][y];
+    }
+
+    private void gameOver() {
+        clearBoard();
+        
+        for (int i = 4; i <= 9; i++){
+            universe[display][i][1] = 'T';
+        }
+        universe[display][4][2] = 'T';
+        universe[display][4][3] = 'T';
+        universe[display][9][2] = 'T';
+        universe[display][9][3] = 'T';
+        universe[display][8][3] = 'T';
+        universe[display][7][3] = 'T';
+
+        for (int i = 9; i <= 14; i++){
+            universe[display][i][5] = 'O';
+        }
+        universe[display][9][6] = 'O';
+        universe[display][9][7] = 'O';
+        universe[display][14][6] = 'O';
+        universe[display][14][7] = 'O';
+        universe[display][13][7] = 'O';
+        universe[display][12][7] = 'O';
+
+        gpanel.repaint();
+
+        gameOverReached = true;
     }
 
     public void stop(){
