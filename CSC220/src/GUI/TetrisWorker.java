@@ -220,6 +220,10 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 }
 
                 if (!pieceInPlay){
+                    checkTetrisClear();
+                    checkTripleLineClear();
+                    checkDoubleLineClear();
+                    checkLineClear();
                     spawnPiece();
                 } else {
                     movePieceDown();
@@ -243,6 +247,62 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 gameOver();
             }
         }
+    }
+
+    
+
+    private void checkTetrisClear() {
+        for (int row = universe[1 - display].length - 1; row >= 3; row--){
+            if (rowFilled(row) && rowFilled(row - 1) && rowFilled(row - 2) && rowFilled(row - 3)){
+                removeRow(row);
+                removeRow(row - 1);
+                removeRow(row - 2);
+                removeRow(row - 3);
+            }
+        }
+    }
+    
+    private void checkTripleLineClear() {
+        for (int row = universe[1 - display].length - 1; row >= 2; row--){
+            if (rowFilled(row) && rowFilled(row - 1) && rowFilled(row - 2)){
+                removeRow(row);
+                removeRow(row - 1);
+                removeRow(row - 2);
+            }
+        }
+    }
+
+    private void checkDoubleLineClear() {
+        for (int row = universe[1 - display].length - 1; row >= 1; row--){
+            if (rowFilled(row) && rowFilled(row - 1)){
+                removeRow(row);
+                removeRow(row - 1);
+            }
+        }
+    }
+
+    private void checkLineClear() {
+        for (int row = universe[1 - display].length - 1; row >= 0; row--){
+            if (rowFilled(row)){
+                removeRow(row);
+            }
+        }
+    }
+
+    private boolean rowFilled(int row) {
+        for (char c : universe[1 -display][row]){
+            if (c == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private void removeRow(int row) {
+        for (int i = row; i > 0; i--){
+            universe[1 - display][i] = universe[1 - display][i - 1];
+        }
+        universe[1 - display][0] = new char[GamePanel.COLS];
     }
 
     private void spawnPiece() {
