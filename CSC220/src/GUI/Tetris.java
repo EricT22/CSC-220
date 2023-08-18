@@ -223,10 +223,12 @@ public class Tetris extends JFrame{
                         
                         playButton.setText("PAUSE");
 
+                        gameWorker.unpause();
                         new Thread(gameWorker).start();
                     } else {
                         playButton.setText("PLAY");
 
+                        gameWorker.pause();
                         gameWorker.stop();
                     }    
                     gamePanel.requestFocus();
@@ -240,6 +242,7 @@ public class Tetris extends JFrame{
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    gameWorker.pause();
                     gameWorker.stop();
                     gameWorker.clearBoard();
 

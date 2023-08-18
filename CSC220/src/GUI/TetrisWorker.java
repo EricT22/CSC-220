@@ -77,6 +77,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     private boolean gameOverReached = false;
     private boolean stop = true;
+    private boolean paused = false;
     private int tickSpeed;
     private GamePanel gpanel;
 
@@ -114,6 +115,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         while(pieceInPlay && !stop){
             movePieceDown();
         }
+        Thread.currentThread().interrupt();
     }
 
     public void movePieceSideways(boolean moveRight){
@@ -232,12 +234,14 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
             }
         }
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            gameOver();
+        if (!paused){
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                gameOver();
+            }
         }
     }
 
@@ -333,5 +337,13 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         }
 
         universe[1 - display] = copy;
+    }
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void unpause() {
+        paused = false;
     }    
 }
