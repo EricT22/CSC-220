@@ -10,7 +10,7 @@ import java.util.Map;
 import GUI.Tetris.GamePanel;
 
 public class TetrisWorker implements Runnable, TetrisPieceConstants{
-    // TODO: Find way to end game then link it up with main GUI
+    // TODO: Fix line clearing bug, add a next array, and connect everything to main GUI
     
     public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
 
@@ -72,6 +72,9 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private char curPiece;
     private int orientation; // 0 up, 1 right, 2 down, 3 left
     Point[][] curPieceConsts;
+    private char heldPiece = 0;
+    private boolean holdPieceTriggered = false;
+    private boolean holdLockedOut = false;
 
     private List<Character> bag = new ArrayList<Character>(7);
 
@@ -212,18 +215,19 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         stop = false;
         while (!stop){
             try {
-                // TODO: Every tick, piece moves down till it hits the bottom
-
                 if (gameOverReached){
                     clearBoard();
                     gameOverReached = false;
                 }
 
                 if (!pieceInPlay){
-                    checkTetrisClear();
-                    checkTripleLineClear();
-                    checkDoubleLineClear();
-                    checkLineClear();
+                    if (!holdPieceTriggered){
+                        checkTetrisClear();
+                        checkTripleLineClear();
+                        checkDoubleLineClear();
+                        checkLineClear();
+                    }
+
                     spawnPiece();
                 } else {
                     movePieceDown();
@@ -260,6 +264,9 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 removeRow(row - 3);
             }
         }
+
+        copyToProcess();
+        gpanel.repaint();
     }
     
     private void checkTripleLineClear() {
@@ -270,6 +277,9 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 removeRow(row - 2);
             }
         }
+
+        copyToProcess();
+        gpanel.repaint();
     }
 
     private void checkDoubleLineClear() {
@@ -279,6 +289,9 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 removeRow(row - 1);
             }
         }
+        
+        copyToProcess();
+        gpanel.repaint();
     }
 
     private void checkLineClear() {
@@ -287,10 +300,13 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
                 removeRow(row);
             }
         }
+        
+        copyToProcess();
+        gpanel.repaint();
     }
 
     private boolean rowFilled(int row) {
-        for (char c : universe[1 -display][row]){
+        for (char c : universe[display][row]){
             if (c == 0){
                 return false;
             }
@@ -300,12 +316,24 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     
     private void removeRow(int row) {
         for (int i = row; i > 0; i--){
-            universe[1 - display][i] = universe[1 - display][i - 1];
+            universe[display][i] = universe[display][i - 1];
         }
-        universe[1 - display][0] = new char[GamePanel.COLS];
+        universe[display][0] = new char[GamePanel.COLS];
     }
 
     private void spawnPiece() {
+        if (holdPieceTriggered && holdLockedOut){
+            pieceInPlay = true;
+            holdPieceTriggered = false;
+            return;
+        } else if (!holdPieceTriggered && holdLockedOut){
+            holdLockedOut = false;
+        } else if (holdPieceTriggered){
+            holdLockedOut = true;
+            removePieceFromBoard();
+            copyToProcess();
+        } 
+        
         if (bag.isEmpty()){
             bag.add('T');
             bag.add('L');
@@ -320,7 +348,19 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
         center = new Point(4, 1);
         orientation = 0;
-        curPiece = bag.remove(0);
+
+        if (!holdPieceTriggered){
+            curPiece = bag.remove(0);
+        } else if (holdPieceTriggered && heldPiece == 0){
+            heldPiece = curPiece;
+            curPiece = bag.remove(0);
+        } else {
+            char tempPiece = heldPiece;
+            heldPiece = curPiece;
+            curPiece = tempPiece;
+        }
+        holdPieceTriggered = false;
+        
         curPieceConsts = pieces.get(curPiece);
 
         for (int i = 0; i < curPieceConsts[orientation].length; i++){
@@ -335,6 +375,14 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         }
 
         pieceInPlay = true;
+    }
+
+    public void holdPiece(){
+        // TODO: do something to update the display on the screen
+        
+        holdPieceTriggered = true;
+        pieceInPlay = false;
+        Thread.currentThread().interrupt();
     }
 
     public char pieceAtPoint(int x, int y){

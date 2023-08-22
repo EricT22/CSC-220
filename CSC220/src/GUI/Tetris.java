@@ -87,6 +87,8 @@ public class Tetris extends JFrame{
                 gameWorker.rotatePiece(false);
             } else if (e.getKeyCode() == 32){
                 gameWorker.autoDown();
+            } else if (e.getKeyCode() == 16){
+                gameWorker.holdPiece();
             }
 
             System.out.println("Key PRESSED: " + e.getKeyCode());
