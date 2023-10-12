@@ -322,11 +322,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     }
 
     private void spawnPiece() {
-        if (holdPieceTriggered && holdLockedOut){
-            pieceInPlay = true;
-            holdPieceTriggered = false;
-            return;
-        } else if (!holdPieceTriggered && holdLockedOut){
+        if (!holdPieceTriggered && holdLockedOut){
             holdLockedOut = false;
         } else if (holdPieceTriggered){
             holdLockedOut = true;
@@ -380,6 +376,10 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     public void holdPiece(){
         // TODO: do something to update the display on the screen
         
+        if (holdLockedOut){
+            return;
+        }
+
         holdPieceTriggered = true;
         pieceInPlay = false;
         Thread.currentThread().interrupt();
