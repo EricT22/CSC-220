@@ -72,6 +72,9 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private char curPiece;
     private int orientation; // 0 up, 1 right, 2 down, 3 left
     Point[][] curPieceConsts;
+
+    private int numLinesCleared = 0;
+
     private char heldPiece = 0;
     private boolean holdPieceTriggered = false;
     private boolean holdLockedOut = false;
@@ -222,12 +225,11 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
                 if (!pieceInPlay){
                     if (!holdPieceTriggered){
-                        checkTetrisClear();
-                        checkTripleLineClear();
-                        checkDoubleLineClear();
                         checkLineClear();
+                        System.out.println("Lines Cleared: " + numLinesCleared);
                     }
 
+                    resetLineClearCounter();
                     spawnPiece();
                 } else {
                     movePieceDown();
@@ -253,51 +255,18 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         }
     }
 
-    
-
-    private void checkTetrisClear() {
-        for (int row = universe[1 - display].length - 1; row >= 3; row--){
-            if (rowFilled(row) && rowFilled(row - 1) && rowFilled(row - 2) && rowFilled(row - 3)){
-                removeRow(row);
-                removeRow(row - 1);
-                removeRow(row - 2);
-                removeRow(row - 3);
-            }
-        }
-
-        copyToProcess();
-        gpanel.repaint();
-    }
-    
-    private void checkTripleLineClear() {
-        for (int row = universe[1 - display].length - 1; row >= 2; row--){
-            if (rowFilled(row) && rowFilled(row - 1) && rowFilled(row - 2)){
-                removeRow(row);
-                removeRow(row - 1);
-                removeRow(row - 2);
-            }
-        }
-
-        copyToProcess();
-        gpanel.repaint();
-    }
-
-    private void checkDoubleLineClear() {
-        for (int row = universe[1 - display].length - 1; row >= 1; row--){
-            if (rowFilled(row) && rowFilled(row - 1)){
-                removeRow(row);
-                removeRow(row - 1);
-            }
-        }
-        
-        copyToProcess();
-        gpanel.repaint();
+    // May be taken out... have a counter tracking total line clears and then check how much
+    // it incremented by to calculate score
+    private void resetLineClearCounter(){
+        numLinesCleared = 0;
     }
 
     private void checkLineClear() {
         for (int row = universe[1 - display].length - 1; row >= 0; row--){
             if (rowFilled(row)){
                 removeRow(row);
+                numLinesCleared++;
+                row+=1;
             }
         }
         
