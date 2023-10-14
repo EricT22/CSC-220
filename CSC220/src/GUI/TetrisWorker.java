@@ -10,7 +10,7 @@ import java.util.Map;
 import GUI.Tetris.GamePanel;
 
 public class TetrisWorker implements Runnable, TetrisPieceConstants{
-    // TODO: Fix line clearing bug, add a next array, and connect everything to main GUI
+    // TODO: Add a next array, and connect everything to main GUI
     
     public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
 
@@ -87,7 +87,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private int tickSpeed;
     private GamePanel gpanel;
 
-    // may have to put try-catch blocks b/c of long boi but for now we're good (or we can do orientation if stmts for that specifically)
+    
     public void movePieceDown(){
         if (pieceInPlay && !stop){
             try {
