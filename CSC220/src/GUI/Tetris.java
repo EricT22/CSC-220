@@ -198,7 +198,7 @@ public class Tetris extends JFrame{
             this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
             this.add(nextLabel);
-            this.add(new nextPanel(125, 400));
+            this.add(new NextPanel(125, 400));
             this.add(playButton);
             this.add(resetButton);
 
@@ -295,7 +295,7 @@ public class Tetris extends JFrame{
             this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
             this.add(holdLabel);
-            this.add(new holdPanel(125, 100));
+            this.add(new HoldPanel(125, 100));
 
             this.add(levelLabel);
             this.add(levelField);
@@ -348,48 +348,6 @@ public class Tetris extends JFrame{
         @Override
         public Dimension getPreferredSize(){
             return new Dimension(200, 500);
-        }
-    }
-
-    private class holdPanel extends JPanel{
-        private int height, width;
-
-        public holdPanel(int width, int height){
-            this.height = height;
-            this.width = width;
-
-            this.setBackground(Color.GRAY);
-        }
-
-        @Override
-        public Dimension getPreferredSize(){
-            return new Dimension(width, height);
-        }
-
-        @Override
-        public void paint(Graphics g){
-            super.paintComponent(g);
-        }
-    }
-
-    private class nextPanel extends JPanel{
-        private int height, width;
-
-        public nextPanel(int width, int height){
-            this.height = height;
-            this.width = width;
-
-            this.setBackground(Color.GRAY);
-        }
-
-        @Override
-        public Dimension getPreferredSize(){
-            return new Dimension(width, height);
-        }
-
-        @Override
-        public void paint(Graphics g){
-            super.paintComponent(g);
         }
     }
 
