@@ -266,19 +266,22 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     }
 
     private void spawnPiece() {
+        // update hold variables
         if (!holdPieceTriggered && holdLockedOut){
             holdLockedOut = false;
         } else if (holdPieceTriggered){
             holdLockedOut = true;
             removePieceFromBoard();
             copyToProcess();
-        } 
+        }
 
+        // get new piece and set location variables
         center = new Point(4, 1);
         orientation = 0;
 
         pullNewPiece();
         
+        // check if it can spawn
         for (int i = 0; i < curPieceConsts[orientation].length; i++){
             if (universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] != 0){
                 stop = true;
@@ -286,6 +289,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
             }
         }
 
+        // spawn piece
         for (int i = 0; i < curPieceConsts[orientation].length; i++){
             universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
         }
