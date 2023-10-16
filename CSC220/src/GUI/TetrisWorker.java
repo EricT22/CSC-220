@@ -31,6 +31,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     private GamePanel gpanel;
 
     
+    // -- User input methods
     public void movePieceDown(){
         if (pieceInPlay && !stop){
             try {
@@ -139,23 +140,54 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         }
     }
 
-    private void returnPieceToBoard() {
-        for (int i = 0; i < curPieceConsts[orientation].length; i++){
-            universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
+    public void holdPiece(){
+        // TODO: do something to update the display on the screen
+        
+        if (holdLockedOut){
+            return;
         }
+
+        holdPieceTriggered = true;
+        pieceInPlay = false;
+        Thread.currentThread().interrupt();
     }
 
-    private void removePieceFromBoard() {
-        for (int i = 0; i < curPieceConsts[orientation].length; i++){
-            universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = 0;
-        }
-    }
+    
+    
 
+    // -- Methods used by GUI
     public TetrisWorker(int level, GamePanel gpanel){
         tickSpeed = 1000 / level;
         this.gpanel = gpanel;
     }
 
+    public char pieceAtPoint(int x, int y){
+        return universe[display][x][y];
+    }
+
+    public void stop(){
+        stop = true;
+    }
+
+    public void setTickSpeed(int level){
+        tickSpeed = 1000 / level;
+    }
+
+    public void clearBoard(){
+        universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
+        pieceInPlay = false;
+    }
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void unpause() {
+        paused = false;
+    }
+
+
+    // -- Run method and its helpers 
     @Override
     public void run() {
         stop = false;
@@ -273,22 +305,6 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         pieceInPlay = true;
     }
 
-    public void holdPiece(){
-        // TODO: do something to update the display on the screen
-        
-        if (holdLockedOut){
-            return;
-        }
-
-        holdPieceTriggered = true;
-        pieceInPlay = false;
-        Thread.currentThread().interrupt();
-    }
-
-    public char pieceAtPoint(int x, int y){
-        return universe[display][x][y];
-    }
-
     private void gameOver() {
         clearBoard();
         drawEndMessage();
@@ -320,17 +336,18 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         gpanel.repaint();
     }
 
-    public void stop(){
-        stop = true;
+
+    // -- General Helper methods
+    private void returnPieceToBoard() {
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
+        }
     }
 
-    public void setTickSpeed(int level){
-        tickSpeed = 1000 / level;
-    }
-
-    public void clearBoard(){
-        universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
-        pieceInPlay = false;
+    private void removePieceFromBoard() {
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            universe[display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = 0;
+        }
     }
 
     private void updateGen() {
@@ -348,13 +365,5 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         }
 
         universe[1 - display] = copy;
-    }
-
-    public void pause() {
-        paused = true;
-    }
-
-    public void unpause() {
-        paused = false;
-    }    
+    }  
 }
