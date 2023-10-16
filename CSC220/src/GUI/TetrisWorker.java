@@ -281,7 +281,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
 
         pullNewPiece();
         
-        // check if it can spawn
+        // check if piece can spawn
         for (int i = 0; i < curPieceConsts[orientation].length; i++){
             if (universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] != 0){
                 stop = true;
