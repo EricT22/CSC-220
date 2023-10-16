@@ -278,10 +278,10 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         orientation = 0;
 
         if (!holdPieceTriggered){
-            curPiece = bag.remove(0);
+            curPiece = bag.getNext();
         } else if (holdPieceTriggered && heldPiece == 0){
             heldPiece = curPiece;
-            curPiece = bag.remove(0);
+            curPiece = bag.getNext();
         } else {
             char tempPiece = heldPiece;
             heldPiece = curPiece;

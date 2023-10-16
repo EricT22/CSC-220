@@ -11,12 +11,12 @@ public class Bag {
         bag = new ArrayList<Character>(7);
     }
 
-    public Character remove(int index) {
+    public Character getNext() {
         if (bagIsEmpty()){
             refillBag();
         }
 
-        return bag.remove(index);
+        return bag.remove(0);
     }
     
 
