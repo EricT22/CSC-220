@@ -1,68 +1,11 @@
 package GUI;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import GUI.Tetris.GamePanel;
 
-public class TetrisWorker implements Runnable, TetrisPieceConstants{
+public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     // TODO: Add a next array, and connect everything to main GUI
-    
-    public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
-
-    static {
-        pieces.put('T', T);
-        pieces.put('L', L);
-        pieces.put('J', J);
-        pieces.put('O', O);
-        pieces.put('S', S);
-        pieces.put('Z', Z);
-        pieces.put('I', I);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     private char[][][] universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
     private int display = 0;
@@ -79,7 +22,7 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
     private boolean holdPieceTriggered = false;
     private boolean holdLockedOut = false;
 
-    private List<Character> bag = new ArrayList<Character>(7);
+    Bag bag = new Bag();
 
     private boolean gameOverReached = false;
     private boolean stop = true;
@@ -298,18 +241,6 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
             removePieceFromBoard();
             copyToProcess();
         } 
-        
-        if (bag.isEmpty()){
-            bag.add('T');
-            bag.add('L');
-            bag.add('J');
-            bag.add('O');
-            bag.add('S');
-            bag.add('Z');
-            bag.add('I');
-
-            Collections.shuffle(bag);
-        }
 
         center = new Point(4, 1);
         orientation = 0;
@@ -360,7 +291,12 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
 
     private void gameOver() {
         clearBoard();
-        
+        drawEndMessage();
+
+        gameOverReached = true;
+    }
+
+    private void drawEndMessage(){
         for (int i = 4; i <= 9; i++){
             universe[display][i][1] = 'T';
         }
@@ -382,8 +318,6 @@ public class TetrisWorker implements Runnable, TetrisPieceConstants{
         universe[display][12][7] = 'O';
 
         gpanel.repaint();
-
-        gameOverReached = true;
     }
 
     public void stop(){
