@@ -277,6 +277,23 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         center = new Point(4, 1);
         orientation = 0;
 
+        pullNewPiece();
+        
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            if (universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] != 0){
+                stop = true;
+                return;
+            }
+        }
+
+        for (int i = 0; i < curPieceConsts[orientation].length; i++){
+            universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
+        }
+
+        pieceInPlay = true;
+    }
+
+    private void pullNewPiece(){
         if (!holdPieceTriggered){
             curPiece = bag.getNext();
         } else if (holdPieceTriggered && heldPiece == 0){
@@ -290,19 +307,6 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         holdPieceTriggered = false;
         
         curPieceConsts = pieces.get(curPiece);
-
-        for (int i = 0; i < curPieceConsts[orientation].length; i++){
-            if (universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] != 0){
-                stop = true;
-                return;
-            }
-        }
-
-        for (int i = 0; i < curPieceConsts[orientation].length; i++){
-            universe[1 - display][center.y + curPieceConsts[orientation][i].y][center.x + curPieceConsts[orientation][i].x] = curPiece;
-        }
-
-        pieceInPlay = true;
     }
 
     private void gameOver() {
