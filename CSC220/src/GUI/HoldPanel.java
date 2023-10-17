@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 public class HoldPanel extends JPanel{
         private int height, width;
 
+        private char heldPiece = 0;
+
         public HoldPanel(int width, int height){
             this.height = height;
             this.width = width;
@@ -33,5 +35,11 @@ public class HoldPanel extends JPanel{
                 System.out.println("Get a better computer peasant, thanks! :)");
                 return;
             }
+        }
+
+        public void updateHeldPiece(char piece){
+            heldPiece = piece;
+
+            this.repaint();
         }
 }

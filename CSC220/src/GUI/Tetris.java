@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 // TODO: Add a ? button that opens the how-to-play instructions
+// TODO: probably add a piece class
 public class Tetris extends JFrame{
     private final int WIDTH = 800;
     private final int HEIGHT = 650;
@@ -33,6 +34,8 @@ public class Tetris extends JFrame{
     private DisplayPanelRight dpr;
     private DisplayPanelLeft dpl;
 
+    private HoldPanel holdPanel;
+
     private TetrisWorker gameWorker;
 
     public Tetris(){
@@ -43,6 +46,7 @@ public class Tetris extends JFrame{
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout(0, 0));
 
+        holdPanel = new HoldPanel(125, 100);
         gamePanel = new GamePanel();
         dpr = new DisplayPanelRight();
         dpl = new DisplayPanelLeft();
@@ -88,7 +92,7 @@ public class Tetris extends JFrame{
             } else if (e.getKeyCode() == 32){
                 gameWorker.autoDown();
             } else if (e.getKeyCode() == 16){
-                gameWorker.holdPiece();
+                gameWorker.holdPiecePressed();
             }
 
             System.out.println("Key PRESSED: " + e.getKeyCode());
@@ -202,7 +206,7 @@ public class Tetris extends JFrame{
             this.add(playButton);
             this.add(resetButton);
 
-            gameWorker = new TetrisWorker(level, gamePanel);
+            gameWorker = new TetrisWorker(level, gamePanel, holdPanel);
         }
 
         private void prepareComponents() {
@@ -295,7 +299,7 @@ public class Tetris extends JFrame{
             this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
             this.add(holdLabel);
-            this.add(new HoldPanel(125, 100));
+            this.add(holdPanel);
 
             this.add(levelLabel);
             this.add(levelField);

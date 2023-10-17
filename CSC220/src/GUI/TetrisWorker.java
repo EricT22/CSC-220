@@ -26,7 +26,9 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     private boolean stop = true;
     private boolean paused = false;
     private int tickSpeed;
+
     private GamePanel gpanel;
+    private HoldPanel hpanel;
 
     
     // -- User input methods
@@ -138,8 +140,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         }
     }
 
-    public void holdPiece(){
-        // TODO: do something to update the display on the screen
+    public void holdPiecePressed(){
         
         if (holdLockedOut){
             return;
@@ -154,9 +155,10 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     
 
     // -- Methods used by GUI
-    public TetrisWorker(int level, GamePanel gpanel){
+    public TetrisWorker(int level, GamePanel gpanel, HoldPanel hpanel){
         tickSpeed = 1000 / level;
         this.gpanel = gpanel;
+        this.hpanel = hpanel;
     }
 
     public char pieceAtPoint(int x, int y){
@@ -264,20 +266,22 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     }
 
     private void spawnPiece() {
-        // update hold variables
-        if (!holdPieceTriggered && holdLockedOut){
-            holdLockedOut = false;
-        } else if (holdPieceTriggered){
-            holdLockedOut = true;
-            removePieceFromBoard();
-            copyToProcess();
-        }
 
         // get new piece and set location variables
+        if (!holdPieceTriggered){
+            curPiece = Bag.getNext();
+
+            if (holdLockedOut)
+                holdLockedOut = false;
+
+        } else {
+            holdPiece();
+        }
+
         center = new Point(4, 1);
         orientation = 0;
-
-        pullNewPiece();
+        
+        curPieceConsts = TetrisPieceConstants.getConstants(curPiece);
         
         // check if piece can spawn
         for (int i = 0; i < curPieceConsts[orientation].length; i++){
@@ -295,10 +299,12 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         pieceInPlay = true;
     }
 
-    private void pullNewPiece(){
-        if (!holdPieceTriggered){
-            curPiece = Bag.getNext();
-        } else if (holdPieceTriggered && heldPiece == 0){
+    private void holdPiece(){
+        holdLockedOut = true;
+        removePieceFromBoard();
+        copyToProcess();
+
+        if (heldPiece == 0){
             heldPiece = curPiece;
             curPiece = Bag.getNext();
         } else {
@@ -306,9 +312,9 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
             heldPiece = curPiece;
             curPiece = tempPiece;
         }
+
+        hpanel.updateHeldPiece(heldPiece);
         holdPieceTriggered = false;
-        
-        curPieceConsts = pieces.get(curPiece);
     }
 
     private void gameOver() {
