@@ -37,7 +37,7 @@ public abstract class TetrisPieceConstants {
                                 {new Point(1, 1), new Point(0, 1), new Point(-1, 1), new Point(2, 1)},
                                 {new Point(0, 1), new Point(0, 0), new Point(0, -1), new Point(0, 2)}};
 
-    public static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
+    private static Map<Character, Point[][]> pieces = new HashMap<Character, Point[][]>();
 
     static {
         pieces.put('T', T);
@@ -47,5 +47,9 @@ public abstract class TetrisPieceConstants {
         pieces.put('S', S);
         pieces.put('Z', Z);
         pieces.put('I', I);
+    }
+
+    public static Point[][] getConstants(Character c){
+        return pieces.get(c);
     }
 }
