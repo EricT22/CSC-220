@@ -186,6 +186,10 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
         paused = false;
     }
 
+    public void resetHeldPiece(){
+        heldPiece = 0;
+    }
+
 
     // -- Run method and its helpers 
     @Override
@@ -320,6 +324,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     private void gameOver() {
         clearBoard();
         drawEndMessage();
+        resetHeldPiece();
 
         gameOverReached = true;
     }

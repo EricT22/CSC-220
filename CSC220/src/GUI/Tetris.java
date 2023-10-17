@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 public class Tetris extends JFrame{
     private final int WIDTH = 800;
     private final int HEIGHT = 650;
-    private final Color COLOR_PURPLE = new Color(155, 0, 228);
+    public static final Color COLOR_PURPLE = new Color(155, 0, 228);
 
     private int level = 1;
     private int score = 0;
@@ -251,7 +251,11 @@ public class Tetris extends JFrame{
                     gameWorker.pause();
                     gameWorker.stop();
                     gameWorker.clearBoard();
+                    gameWorker.resetHeldPiece();
 
+                    Bag.shuffle();
+
+                    holdPanel.resetHoldPanel();
                     
                     playButton.setText("PLAY");
 

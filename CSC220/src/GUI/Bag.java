@@ -7,6 +7,10 @@ import java.util.List;
 public class Bag {
     private static List<Character> bag = new ArrayList<Character>(7);
 
+    public static void shuffle(){
+        Collections.shuffle(bag);
+    }
+
     public static Character getNext() {
         if (bagIsEmpty()){
             refillBag();
@@ -29,10 +33,10 @@ public class Bag {
         bag.add('Z');
         bag.add('I');
 
-        Collections.shuffle(bag);
+        shuffle();
     }
 
-    public Bag(){
-        throw new UnsupportedOperationException("Don't instantiate this class");
+    private Bag(){
+        // shouldn't instantiate Bag
     }
 }
