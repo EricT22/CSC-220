@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Bag",
+            "request": "launch",
+            "mainClass": "GUI.Bag",
+            "projectName": "CSC 220_f21edfca"
+        },
+        {
+            "type": "java",
             "name": "Tetris",
             "request": "launch",
             "mainClass": "GUI.Tetris",

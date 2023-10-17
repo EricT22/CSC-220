@@ -22,8 +22,6 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     private boolean holdPieceTriggered = false;
     private boolean holdLockedOut = false;
 
-    Bag bag = new Bag();
-
     private boolean gameOverReached = false;
     private boolean stop = true;
     private boolean paused = false;
@@ -299,10 +297,10 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
 
     private void pullNewPiece(){
         if (!holdPieceTriggered){
-            curPiece = bag.getNext();
+            curPiece = Bag.getNext();
         } else if (holdPieceTriggered && heldPiece == 0){
             heldPiece = curPiece;
-            curPiece = bag.getNext();
+            curPiece = Bag.getNext();
         } else {
             char tempPiece = heldPiece;
             heldPiece = curPiece;

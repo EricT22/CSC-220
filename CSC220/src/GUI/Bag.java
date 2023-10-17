@@ -5,13 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Bag {
-    private List<Character> bag;
-    
-    public Bag(){
-        bag = new ArrayList<Character>(7);
-    }
+    private static List<Character> bag = new ArrayList<Character>(7);
 
-    public Character getNext() {
+    public static Character getNext() {
         if (bagIsEmpty()){
             refillBag();
         }
@@ -20,11 +16,11 @@ public class Bag {
     }
     
 
-    private boolean bagIsEmpty() {
+    private static boolean bagIsEmpty() {
         return bag.isEmpty();
     }
     
-    private void refillBag() {
+    private static void refillBag() {
         bag.add('T');
         bag.add('L');
         bag.add('J');
@@ -34,5 +30,9 @@ public class Bag {
         bag.add('I');
 
         Collections.shuffle(bag);
+    }
+
+    public Bag(){
+        throw new UnsupportedOperationException("Don't instantiate this class");
     }
 }
