@@ -34,7 +34,7 @@ public class Tetris extends JFrame{
     private DisplayPanelRight dpr;
     private DisplayPanelLeft dpl;
 
-    private HoldPanel holdPanel;
+    private PiecePanel holdPanel;
 
     private TetrisWorker gameWorker;
 
@@ -46,7 +46,7 @@ public class Tetris extends JFrame{
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout(0, 0));
 
-        holdPanel = new HoldPanel(125, 100);
+        holdPanel = new PiecePanel(125, 100);
         gamePanel = new GamePanel();
         dpr = new DisplayPanelRight();
         dpl = new DisplayPanelLeft();

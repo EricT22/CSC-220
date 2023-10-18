@@ -28,7 +28,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     private int tickSpeed;
 
     private GamePanel gpanel;
-    private HoldPanel hpanel;
+    private PiecePanel hpanel;
 
     
     // -- User input methods
@@ -155,7 +155,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     
 
     // -- Methods used by GUI
-    public TetrisWorker(int level, GamePanel gpanel, HoldPanel hpanel){
+    public TetrisWorker(int level, GamePanel gpanel, PiecePanel hpanel){
         tickSpeed = 1000 / level;
         this.gpanel = gpanel;
         this.hpanel = hpanel;

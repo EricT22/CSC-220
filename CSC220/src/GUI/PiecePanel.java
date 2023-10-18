@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import GUI.Tetris.GamePanel;
 
-public class HoldPanel extends JPanel{
+public class PiecePanel extends JPanel{
     public static final int COLS = 5;
     public static final int ROWS = 4;
     
@@ -21,9 +21,9 @@ public class HoldPanel extends JPanel{
     private Point center = new Point(2, 2);
     private char heldPiece = 0;
     
-    private char[][] holdUniverse = new char[HoldPanel.ROWS][HoldPanel.COLS];
+    private char[][] pieceUniverse = new char[PiecePanel.ROWS][PiecePanel.COLS];
 
-    public HoldPanel(int width, int height){
+    public PiecePanel(int width, int height){
         super();
 
         this.height = height;
@@ -73,21 +73,21 @@ public class HoldPanel extends JPanel{
         for (int i = 0; i < verts; i++){
             for (int j = 0; j < horzs; j++){
 
-                if (holdUniverse[i][j] == 0){
+                if (pieceUniverse[i][j] == 0){
                     continue;
-                } else if (holdUniverse[i][j] == 'T'){
+                } else if (pieceUniverse[i][j] == 'T'){
                     g2.setColor(Tetris.COLOR_PURPLE);
-                } else if (holdUniverse[i][j] == 'L'){
+                } else if (pieceUniverse[i][j] == 'L'){
                     g2.setColor(Color.ORANGE);
-                } else if (holdUniverse[i][j] == 'J'){
+                } else if (pieceUniverse[i][j] == 'J'){
                     g2.setColor(Color.BLUE);
-                } else if (holdUniverse[i][j] == 'I'){
+                } else if (pieceUniverse[i][j] == 'I'){
                     g2.setColor(new Color(30, 220, 252)); // light blue
-                } else if (holdUniverse[i][j] == 'O'){
+                } else if (pieceUniverse[i][j] == 'O'){
                     g2.setColor(Color.YELLOW);
-                } else if (holdUniverse[i][j] == 'S'){
+                } else if (pieceUniverse[i][j] == 'S'){
                     g2.setColor(Color.GREEN);
-                } else if (holdUniverse[i][j] == 'Z'){
+                } else if (pieceUniverse[i][j] == 'Z'){
                     g2.setColor(Color.RED);
                 } 
                     
@@ -104,27 +104,27 @@ public class HoldPanel extends JPanel{
     }
 
     public void updateHeldPiece(char piece){
-        clearHoldUniverse();
+        clearPieceUniverse();
 
         heldPiece = piece;
 
         Point[][] pieceConsts = TetrisPieceConstants.getConstants(heldPiece);
 
         for (int i = 0; i < pieceConsts[0].length; i++){
-            holdUniverse[center.y + pieceConsts[0][i].y][center.x + pieceConsts[0][i].x] = heldPiece;
+            pieceUniverse[center.y + pieceConsts[0][i].y][center.x + pieceConsts[0][i].x] = heldPiece;
         }
 
         this.repaint();
     }
 
-    private void clearHoldUniverse() {
-        holdUniverse = new char[HoldPanel.ROWS][HoldPanel.COLS];
+    private void clearPieceUniverse() {
+        pieceUniverse = new char[PiecePanel.ROWS][PiecePanel.COLS];
     }
 
     public void resetHoldPanel(){
         heldPiece = 0;
 
-        clearHoldUniverse();
+        clearPieceUniverse();
         this.repaint();
     }
 }
