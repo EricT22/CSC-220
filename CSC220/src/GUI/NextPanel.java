@@ -2,36 +2,41 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
 public class NextPanel extends JPanel{
-    private int height, width;
+    private PiecePanel[] panels;
 
-    public NextPanel(int width, int height){
-        this.height = height;
-        this.width = width;
+    public NextPanel(int numPanels){
+        super();
 
-        this.setBackground(Color.GRAY);
+        this.setBackground(Color.BLACK);
+
+        this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+
+        panels = new PiecePanel[numPanels];
+
+        for (int i = 0; i < numPanels; i++){
+            panels[i] = new PiecePanel(125, 100);
+            this.add(panels[i]);
+        }
     }
 
     @Override
     public Dimension getPreferredSize(){
-        return new Dimension(width, height);
+        return new Dimension(125, 400);
     }
 
     @Override
     public void paint(Graphics g){
         super.paintComponent(g);
 
-        Graphics2D g2;
-        if (g instanceof Graphics2D){
-            g2 = (Graphics2D) g;
-        } else {
-            System.out.println("Get a better computer peasant, thanks! :)");
-            return;
+        for (PiecePanel panel : panels){
+            panel.repaint();
         }
     }
 }

@@ -202,7 +202,7 @@ public class Tetris extends JFrame{
             this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
             this.add(nextLabel);
-            this.add(new NextPanel(125, 400));
+            this.add(new NextPanel(4));
             this.add(playButton);
             this.add(resetButton);
 

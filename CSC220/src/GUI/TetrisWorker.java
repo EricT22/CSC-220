@@ -273,7 +273,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
 
         // get new piece and set location variables
         if (!holdPieceTriggered){
-            curPiece = Bag.getNext();
+            curPiece = Bag.getNextPiece();
 
             if (holdLockedOut)
                 holdLockedOut = false;
@@ -310,7 +310,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
 
         if (heldPiece == 0){
             heldPiece = curPiece;
-            curPiece = Bag.getNext();
+            curPiece = Bag.getNextPiece();
         } else {
             char tempPiece = heldPiece;
             heldPiece = curPiece;
