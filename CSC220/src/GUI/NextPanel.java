@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
@@ -16,7 +15,7 @@ public class NextPanel extends JPanel{
 
         this.setBackground(Color.BLACK);
 
-        this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 3));
 
         panels = new PiecePanel[numPanels];
 
@@ -28,7 +27,7 @@ public class NextPanel extends JPanel{
 
     @Override
     public Dimension getPreferredSize(){
-        return new Dimension(125, 400);
+        return new Dimension(125, 409);
     }
 
     @Override
