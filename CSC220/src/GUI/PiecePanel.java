@@ -37,7 +37,6 @@ public class PiecePanel extends JPanel{
         return new Dimension(width, height);
     }
 
-    // TODO: paint border edges
     @Override
     public void paint(Graphics g){
         super.paintComponent(g);

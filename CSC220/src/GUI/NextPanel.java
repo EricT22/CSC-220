@@ -38,4 +38,18 @@ public class NextPanel extends JPanel{
             panel.repaint();
         }
     }
+
+    public void updatePanels(Character[] pieces){
+        for (int i = 0; i < pieces.length; i++){
+            panels[i].updateHeldPiece(pieces[i]);
+        }
+        this.repaint();
+    }
+
+    public void resetNextPanel(){
+        for (PiecePanel panel : panels){
+            panel.resetHoldPanel();
+            panel.repaint();
+        }
+    }
 }
