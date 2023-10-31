@@ -1,0 +1,6 @@
+{
+    "java.project.sourcePaths": [
+        "CSC220/src",
+        "CSC220\\src\\GUI\\resources"
+    ]
+}
