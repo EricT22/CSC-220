@@ -5,7 +5,7 @@ import java.awt.Point;
 import GUI.Tetris.GamePanel;
 
 public class TetrisWorker extends TetrisPieceConstants implements Runnable{
-    // TODO: Add a next array, and connect everything to main GUI
+    // TODO: Connect everything to main GUI
     
     private char[][][] universe = new char[2][GamePanel.ROWS][GamePanel.COLS];
     private int display = 0;
@@ -22,6 +22,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     private boolean holdPieceTriggered = false;
     private boolean holdLockedOut = false;
 
+    private int levelUpConstant = 10;
     private boolean gameOverReached = false;
     private boolean stop = true;
     private boolean paused = false;
@@ -29,10 +30,12 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
 
     private GamePanel gpanel;
     private PiecePanel hpanel;
+    private NextPanel npanel;
+    private Tetris.DisplayPanelLeft dpl;
 
     
     // -- User input methods
-    public void movePieceDown(){
+    public void movePieceDown(int scorePerMove){
         if (pieceInPlay && !stop){
             try {
                 removePieceFromBoard();
@@ -53,6 +56,9 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
                 }
 
                 copyToProcess();
+
+                Tetris.score += scorePerMove;
+                dpl.updateScoreField();
             } catch (IndexOutOfBoundsException e){
                 center.y -= 1;
                 returnPieceToBoard();
@@ -63,7 +69,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
 
     public void autoDown(){
         while(pieceInPlay && !stop){
-            movePieceDown();
+            movePieceDown(2);
         }
         Thread.currentThread().interrupt();
     }
@@ -155,10 +161,12 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     
 
     // -- Methods used by GUI
-    public TetrisWorker(int level, GamePanel gpanel, PiecePanel hpanel){
-        tickSpeed = 1000 / level;
+    public TetrisWorker(int level, GamePanel gpanel, PiecePanel hpanel, NextPanel npanel, Tetris.DisplayPanelLeft dpl){
+        tickSpeed = 1000 - (10 * level);
         this.gpanel = gpanel;
         this.hpanel = hpanel;
+        this.npanel = npanel;
+        this.dpl = dpl;
     }
 
     public char pieceAtPoint(int x, int y){
@@ -170,7 +178,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     }
 
     public void setTickSpeed(int level){
-        tickSpeed = 1000 / level;
+        tickSpeed = 1000 - (10 * level);
     }
 
     public void clearBoard(){
@@ -205,13 +213,15 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
                 if (!pieceInPlay){
                     if (!holdPieceTriggered){
                         checkLineClear();
+                        updateCounters();
                         System.out.println("Lines Cleared: " + numLinesCleared);
+                        resetLineClearCounter();
                     }
 
-                    resetLineClearCounter();
                     spawnPiece();
+                    updateNextPanel();
                 } else {
-                    movePieceDown();
+                    movePieceDown(0);
                 }
 
                 updateGen();
@@ -232,6 +242,30 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
                 gameOver();
             }
         }
+    }
+
+    public void updateCounters(){
+        Tetris.linesCleared += numLinesCleared;
+
+        int lineScore = 0;
+        switch(numLinesCleared){
+            case 0 -> lineScore = 0;
+            case 1 -> lineScore = 100 * Tetris.level;
+            case 2 -> lineScore = 300 * Tetris.level;
+            case 3 -> lineScore = 500 * Tetris.level;
+            case 4 -> lineScore = 800 * Tetris.level;
+        }
+
+        Tetris.score += lineScore;
+
+        if (Tetris.linesCleared != 0 && Tetris.linesCleared % levelUpConstant == 0){
+            Tetris.level++;
+            setTickSpeed(Tetris.level);
+        }
+
+        dpl.updateLinesField();
+        dpl.updateScoreField();
+        dpl.updateLevelField();
     }
 
     // May be taken out... have a counter tracking total line clears and then check how much
@@ -319,6 +353,10 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
 
         hpanel.updateHeldPiece(heldPiece);
         holdPieceTriggered = false;
+    }
+
+    private void updateNextPanel(){
+        npanel.updatePanels(Bag.getNext());
     }
 
     private void gameOver() {

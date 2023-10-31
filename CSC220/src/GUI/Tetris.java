@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,9 +28,9 @@ public class Tetris extends JFrame{
     private final int HEIGHT = 650;
     public static final Color COLOR_PURPLE = new Color(155, 0, 228);
 
-    private int level = 1;
-    private int score = 0;
-    private int linesCleared = 0;
+    public static int level = 1;
+    public static int score = 0;
+    public static int linesCleared = 0;
 
     private GamePanel gamePanel;
     private DisplayPanelRight dpr;
@@ -36,20 +38,33 @@ public class Tetris extends JFrame{
 
     private PiecePanel holdPanel;
 
+    private NextPanel nextPanel;
+
     private TetrisWorker gameWorker;
+
+    // private ImageIcon logo = new ImageIcon("C:/Users/Eric/OneDrive/Documents/CSC 220/CSC220/res/logo.png");
+    private ImageIcon logo;
 
     public Tetris(){
         super("Tetris");
         
         this.setSize(WIDTH, HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // -- Note to self
+        // -- resource folder must be added to classpath in order for the code below to work
+        URL u = getClass().getClassLoader().getResource("logo.png");
+        logo = new ImageIcon(u);
+        this.setIconImage(logo.getImage());
+
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout(0, 0));
 
         holdPanel = new PiecePanel(125, 100);
+        nextPanel = new NextPanel(4);
         gamePanel = new GamePanel();
-        dpr = new DisplayPanelRight();
         dpl = new DisplayPanelLeft();
+        dpr = new DisplayPanelRight();
 
         this.add(gamePanel, BorderLayout.CENTER);
         this.add(dpr, BorderLayout.EAST);
@@ -80,7 +95,7 @@ public class Tetris extends JFrame{
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == 40){
-                gameWorker.movePieceDown();
+                gameWorker.movePieceDown(1);
             } else if (e.getKeyCode() == 39){
                 gameWorker.movePieceSideways(true);
             } else if (e.getKeyCode() == 37){
@@ -93,6 +108,8 @@ public class Tetris extends JFrame{
                 gameWorker.autoDown();
             } else if (e.getKeyCode() == 16){
                 gameWorker.holdPiecePressed();
+            } else if (e.getKeyCode() == 27){
+                dpr.playButton.doClick();
             }
 
             System.out.println("Key PRESSED: " + e.getKeyCode());
@@ -202,11 +219,11 @@ public class Tetris extends JFrame{
             this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 
             this.add(nextLabel);
-            this.add(new NextPanel(4));
+            this.add(nextPanel);
             this.add(playButton);
             this.add(resetButton);
 
-            gameWorker = new TetrisWorker(level, gamePanel, holdPanel);
+            gameWorker = new TetrisWorker(level, gamePanel, holdPanel, nextPanel, dpl);
         }
 
         private void prepareComponents() {
@@ -253,9 +270,11 @@ public class Tetris extends JFrame{
                     gameWorker.clearBoard();
                     gameWorker.resetHeldPiece();
 
-                    Bag.shuffle();
+                    Bag.refillAndShuffle();
 
                     holdPanel.resetHoldPanel();
+
+                    nextPanel.resetNextPanel();
                     
                     playButton.setText("PLAY");
 
@@ -322,7 +341,7 @@ public class Tetris extends JFrame{
             levelLabel.setFont(new Font("Arial", Font.PLAIN, 50));
             levelLabel.setForeground(Color.WHITE);
 
-            levelField = new JTextField(level + "", 5);
+            levelField = new JTextField(Tetris.level + "", 5);
             levelField.setFont(new Font("Arial", Font.PLAIN, 25));
             levelField.setHorizontalAlignment(JTextField.CENTER);
             levelField.setBackground(Color.GRAY);
@@ -333,7 +352,7 @@ public class Tetris extends JFrame{
             scoreLabel.setFont(new Font("Arial", Font.PLAIN, 50));
             scoreLabel.setForeground(Color.WHITE);
             
-            scoreField = new JTextField(score + "", 5);
+            scoreField = new JTextField(Tetris.score + "", 5);
             scoreField.setFont(new Font("Arial", Font.PLAIN, 25));
             scoreField.setHorizontalAlignment(JTextField.CENTER);
             scoreField.setBackground(Color.GRAY);
@@ -344,7 +363,7 @@ public class Tetris extends JFrame{
             linesClearedLabel.setFont(new Font("Arial", Font.PLAIN, 50));
             linesClearedLabel.setForeground(Color.WHITE);
             
-            linesClearedField = new JTextField(linesCleared + "", 5);
+            linesClearedField = new JTextField(Tetris.linesCleared + "", 5);
             linesClearedField.setFont(new Font("Arial", Font.PLAIN, 25));
             linesClearedField.setHorizontalAlignment(JTextField.CENTER);
             linesClearedField.setBackground(Color.GRAY);
@@ -356,6 +375,18 @@ public class Tetris extends JFrame{
         @Override
         public Dimension getPreferredSize(){
             return new Dimension(200, 500);
+        }
+
+        public void updateScoreField(){
+            scoreField.setText(Tetris.score + "");
+        }
+        
+        public void updateLevelField(){
+            levelField.setText(Tetris.level + "");
+        }
+        
+        public void updateLinesField(){
+            linesClearedField.setText(Tetris.linesCleared + "");
         }
     }
 
