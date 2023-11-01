@@ -178,7 +178,7 @@ public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     }
 
     public void setTickSpeed(int level){
-        tickSpeed = 1000 - (10 * level);
+        tickSpeed = 1000 - (20 * level);
     }
 
     public void clearBoard(){
