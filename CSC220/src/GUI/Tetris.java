@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
 
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-// TODO: Add a ? button that opens the how-to-play instructions
+// TODO: Updating level field doesn't work as intended
 public class Tetris extends JFrame{
     private final int WIDTH = 800;
     private final int HEIGHT = 650;
@@ -41,7 +42,6 @@ public class Tetris extends JFrame{
 
     private TetrisWorker gameWorker;
 
-    // private ImageIcon logo = new ImageIcon("C:/Users/Eric/OneDrive/Documents/CSC 220/CSC220/res/logo.png");
     private ImageIcon logo;
 
     public Tetris(){
@@ -109,6 +109,8 @@ public class Tetris extends JFrame{
                 gameWorker.holdPiecePressed();
             } else if (e.getKeyCode() == 27){
                 dpr.playButton.doClick();
+            } else if (e.getKeyCode() == 82){
+                dpr.resetButton.doClick();
             }
 
             System.out.println("Key PRESSED: " + e.getKeyCode());
@@ -302,13 +304,16 @@ public class Tetris extends JFrame{
 
     public class DisplayPanelLeft extends JPanel {
         
+        public JTextField levelField;
+        public JTextField scoreField;
+        public JTextField linesClearedField;
+        
         private JLabel holdLabel;
         private JLabel levelLabel;
         private JLabel scoreLabel;
         private JLabel linesClearedLabel;
-        public JTextField levelField;
-        public JTextField scoreField;
-        public JTextField linesClearedField;
+
+        private JButton howToPlayButton;
 
 
         public DisplayPanelLeft(){
@@ -329,6 +334,8 @@ public class Tetris extends JFrame{
             this.add(scoreField);
             this.add(linesClearedLabel);
             this.add(linesClearedField);
+            this.add(howToPlayButton);
+            this.add(Box.createRigidArea(new Dimension(0, 80)));
         }
 
         private void prepareComponents() {
@@ -369,6 +376,17 @@ public class Tetris extends JFrame{
             linesClearedField.setForeground(COLOR_PURPLE);
             linesClearedField.setEditable(false);
             
+            howToPlayButton = new JButton("   ?   ");
+            howToPlayButton.setFont(new Font("Arial", Font.PLAIN, 25));
+            howToPlayButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new InstructionsFrame(logo);
+                    gamePanel.requestFocus();
+                }
+                
+            });
         }
 
         @Override
