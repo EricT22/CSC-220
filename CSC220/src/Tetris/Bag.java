@@ -1,4 +1,4 @@
-package GUI;
+package Tetris;
 
 import java.util.ArrayList;
 import java.util.Collections;

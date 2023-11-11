@@ -1,4 +1,4 @@
-package GUI;
+package Tetris;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -9,7 +9,7 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
-import GUI.Tetris.GamePanel;
+import Tetris.Tetris.GamePanel;
 
 public class PiecePanel extends JPanel{
     public static final int COLS = 5;

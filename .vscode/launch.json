@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Tetris",
+            "request": "launch",
+            "mainClass": "Tetris.Tetris",
+            "projectName": "CSC 220_f21edfca"
+        },
+        {
+            "type": "java",
             "name": "InstructionsFrame",
             "request": "launch",
             "mainClass": "GUI.InstructionsFrame",

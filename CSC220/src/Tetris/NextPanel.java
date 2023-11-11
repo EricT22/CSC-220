@@ -1,4 +1,4 @@
-package GUI;
+package Tetris;
 
 import java.awt.Color;
 import java.awt.Dimension;

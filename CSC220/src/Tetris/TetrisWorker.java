@@ -1,8 +1,8 @@
-package GUI;
+package Tetris;
 
 import java.awt.Point;
 
-import GUI.Tetris.GamePanel;
+import Tetris.Tetris.GamePanel;
 
 public class TetrisWorker extends TetrisPieceConstants implements Runnable{
     // TODO: Connect everything to main GUI
