@@ -22,7 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-// TODO: Updating level field doesn't work as intended
 public class Tetris extends JFrame{
     private final int WIDTH = 800;
     private final int HEIGHT = 650;
